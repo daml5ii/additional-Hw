@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        #colorPicker {
+            margin-bottom: 16px;
+        }
+
+        #canvas {
+            border: 1px solid #ccc;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <h1>Draw on this Canvas</h1>
+    <input type="color" id="colorPicker" value="#000000" />
+    <canvas id="canvas" width="500" height="500"></canvas>
+</div>
+
+<script>
+    // Get the canvas element
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+
+    // Set initial mouse coordinates
+    var mouseX = 0;
+    var mouseY = 0;
+
+    // Flag to track mouse state
+    var isDrawing = false;
+
+    // Get the color picker element
+    var colorPicker = document.getElementById("colorPicker");
+    var currentColor = colorPicker.value;
+
+    // Set up event listeners
+    canvas.addEventListener("mousedown", function(event) {
+        isDrawing = true;
+        mouseX = event.clientX - canvas.offsetLeft;
+        mouseY = event.clientY - canvas.offsetTop;
+    });
+
+    canvas.addEventListener("mousemove", function(event) {
+        if (isDrawing) {
+            var currentX = event.clientX - canvas.offsetLeft;
+            var currentY = event.clientY - canvas.offsetTop;
+
+            // Draw a line from the previous position to the current position with the selected color
+            context.beginPath();
+            context.moveTo(mouseX, mouseY);
+            context.lineTo(currentX, currentY);
+            context.strokeStyle = currentColor;
+            context.stroke();
+
+            mouseX = currentX;
+            mouseY = currentY;
+        }
+    });
+
+    canvas.addEventListener("mouseup", function() {
+        isDrawing = false;
+    });
+
+    // Update the current color when the color picker value changes
+    colorPicker.addEventListener("input", function() {
+        currentColor = colorPicker.value;
+    });
+</script>
+</body>
+</html>
